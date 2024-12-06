@@ -7,8 +7,8 @@ class appointment {
   char AppointmentDate[30];
   char DoctorID[15];  // secondary key
   appointment();
-  void Read(fstream& stream);
-  void Write(fstream& stream);
+  // void Read(fstream& stream);
+  // void Write(fstream& stream);
 };
 
 #endif
