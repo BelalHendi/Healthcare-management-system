@@ -4,9 +4,10 @@
 
 #include "doctor.h"
 class doctorFileService {
+
  public:
   doctorFileService();
-  int addDoctor(string, string, string);
+  void addDoctor(string id, string name, string address);
   void deleteDoctor(int offset);
 };
 

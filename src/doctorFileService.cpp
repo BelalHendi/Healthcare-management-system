@@ -1,59 +1,90 @@
 #include "doctorFileService.h"
-
+#include "doctorIndexService.h"
 #include "doctor.h"
 
 doctorFileService::doctorFileService() {
-  fstream fout("doctors.txt", ios::in);
+  fstream fout("../output/doctors.txt", ios::in | ios::out | ios::binary);
+  fout.close();
   if (!fout.is_open()) {
+    fout.open("../output/doctors.txt", ios::out | ios::in| ios::binary);
+    int header = -1;
+    fout.write((char*)&header, sizeof(header));
     fout.close();
-    fout.open("doctors.txt", ios::out);
-    int headerPointer = -1;
-    fout.write((char*)&headerPointer, sizeof(int));
+    fout.open("../output/doctors.txt", ios::out | ios::in| ios::binary);
   }
+
   fout.close();
 }
 
-int doctorFileService::addDoctor(string Id, string Name, string Address) {
-  doctor doc;
-  strcpy(doc.Id, Id.c_str());
-  strcpy(doc.Name, Name.c_str());
-  strcpy(doc.Address, Address.c_str());
-  int len = Id.size() + Name.size() + Address.size() + 3;
-
-  // fstream fout("doctors.txt", ios::in | ios::out);
-  // int header = -1;
-  // fout.read((char*)&header, sizeof(int));
-  // bool found = false;
-  // if (header == -1) {
-  //   fout.seekp(0, ios::end);
-  //   doc.Write(fout);
-  // } else {
-  //   while (header != -1 && !found) {
-  //     fout.seekg(header, ios::beg);
-  //     short freeSpace = 0;
-  //     int nextPointer = 0;
-  //     fout.read((char*)&freeSpace, sizeof(short));
-  //     fout.read((char*)&nextPointer, sizeof(int));
-  //     if (freeSpace >= len) found = true;
-  //   }
-  // }
+// I changed the return type to void and made function doc.Write return int instead.
+// fell free to change this if needed there is a variable int off.
+void doctorFileService::addDoctor(string id, string name, string address) {
+    doctor doc;
+    strcpy(doc.id, id.c_str());
+    strcpy(doc.name, name.c_str());
+    strcpy(doc.address, address.c_str());
+    short len = id.size() + name.size() + address.size() + 3;
+    cout<< "cur_len: " <<  len << endl;
+    int header = -1;
+    fstream fout("../output/doctors.txt", ios::in | ios::out);
+    fout.read((char *) &header, sizeof(header));
+    bool found = false;
+    int prev = -2;
+    short freeSpace = 0;
+    if (header == -1) {
+        fout.seekp(0, ios::end);
+        int off = doc.Write(fout);
+        return;
+    } else {
+        while (header != -1 && !found) {
+            fout.seekg(header, ios::beg);
+            fout.read((char *) &freeSpace, sizeof(short));
+            if (freeSpace >= len) {
+                found = true;
+                break;
+            }
+            prev = header;
+            fout.read((char *) &header, sizeof(int));
+        }
+    }
+    if(found){
+        // get the next in availlist.
+        fout.seekg(header + 2,ios::beg);
+        int nxt_avail;
+        fout.read((char*) &nxt_avail,sizeof (nxt_avail));
+        // insert the new record
+        fout.seekp(header,ios::beg);
+        int off = doc.Write(fout); // use it to update index
+        // reclaiming space.
+        if(freeSpace - len >= 5){
+            short new_space = freeSpace - len;
+            fout.write((char*)&new_space, sizeof(new_space));
+            fout.write((char*) &nxt_avail,sizeof (nxt_avail));
+            // prev is the header.
+            fout.seekp(prev + 2, ios::beg);
+            int new_off = header + len;
+            fout.write((char*) &new_off,sizeof (int));
+        }
+        else{
+            fout.seekp(prev + 2, ios::beg);
+            fout.write((char*) &nxt_avail,sizeof (nxt_avail));
+        }
+    }
+    else{
+        fout.seekp(0, ios::end);
+        int off = doc.Write(fout); // use it to update index
+    }
 }
 
-// 7     // el size = 9
-// 4/ 10 -1 '*'
-// 5/ 7 4 '*'
-// 7/ 6 5 '*'
-
-// xx 0000 ( ' ' or 'x' ) [] => len(xx)
 
 void doctorFileService::deleteDoctor(int offset) {
-  fstream fout("doctors.txt", ios::in | ios::out);
-  fout.seekp(0, ios::beg);
-  int header = -1;
-  fout.read((char*)&header, sizeof(header));
-  fout.seekp(0, ios::beg);
-  fout.write((char*)&offset, sizeof(int));
-  fout.seekp(offset + 2, ios::beg);
-  fout.write((char*)&header, sizeof(int));
-  fout.put('*');
+    int header = -1;
+    fstream fout("../output/doctors.txt", ios::in | ios::out);
+    fout.seekp(0, ios::beg);
+    fout.read((char *) &header, sizeof(header));
+    fout.seekp(0, ios::beg);
+    fout.write((char *) &offset, sizeof(int));
+    fout.seekp(offset + 2, ios::beg);
+    fout.write((char *) &header, sizeof(int));
+    fout.put('*');
 }

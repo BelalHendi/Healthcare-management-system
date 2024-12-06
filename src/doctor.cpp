@@ -2,29 +2,32 @@
 
 #include <cstring>
 #include <strstream>
-
+#include <iostream>
 doctor::doctor() {
-  memset(Id, '\0', sizeof(Id));
-  memset(Name, '\0', sizeof(Name));
-  memset(Address, '\0', sizeof(Address));
+  memset(id, '\0', sizeof(id));
+  memset(name, '\0', sizeof(name));
+  memset(address, '\0', sizeof(address));
   nextRec = -1;
 }
 
-void doctor::Write(fstream& stream) {
-  char* record = new char[78];
+int doctor::Write(fstream& stream) {
+  char* record = new char[80];
   memset(record, '\0', sizeof(record));
-  strcat(record, this->Id);
+  strcat(record, this->id);
   strcat(record, "|");
-  strcat(record, this->Name);
+  strcat(record, this->name);
   strcat(record, "|");
-  strcat(record, this->Address);
+  strcat(record, this->address);
   strcat(record, "|");
   short length = strlen(record);
+  int offset = stream.tellp();
+  cout<< "cur_off: " << stream.tellp() << endl;
   stream.write((char*)&length, sizeof(short));
   stream.write((char*)&nextRec, sizeof(int));
   stream.put(' ');
   stream.write(record, length);
   delete[] record;
+  return offset;
 }
 
 void doctor::Read(fstream& stream) {
@@ -36,10 +39,10 @@ void doctor::Read(fstream& stream) {
   istrstream strbuff(record);
   string str;
   strbuff >> str;
-  strcpy(this->Id, str.c_str());
+  strcpy(this->id, str.c_str());
   strbuff >> str;
-  strcpy(this->Name, str.c_str());
+  strcpy(this->name, str.c_str());
   strbuff >> str;
-  strcpy(this->Address, str.c_str());
+  strcpy(this->address, str.c_str());
   delete[] record;
 }

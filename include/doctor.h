@@ -6,14 +6,15 @@ using namespace std;
 class doctor {
  private:
   int nextRec;
-  char delted;
+  char deleted;
 
  public:
-  char Id[15];
-  char Name[30];
-  char Address[30];
+  char id[15];
+  char name[30];
+  char address[30];
+  const int max_record_length = 100;
   doctor();
-  void Write(fstream&);
+  int Write(fstream&);
   void Read(fstream&);
 };
 
