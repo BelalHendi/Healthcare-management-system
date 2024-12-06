@@ -24,7 +24,7 @@ void doctorFileService::addDoctor(string id, string name, string address) {
     strcpy(doc.name, name.c_str());
     strcpy(doc.address, address.c_str());
     short len = id.size() + name.size() + address.size() + 3;
-    cout<< "cur_len: " <<  len << endl;
+//    cout<< "cur_len: " <<  len << endl;
     int header = -1;
     fstream fout("../output/doctors.txt", ios::in | ios::out);
     fout.read((char *) &header, sizeof(header));

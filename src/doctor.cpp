@@ -21,7 +21,7 @@ int doctor::Write(fstream& stream) {
   strcat(record, "|");
   short length = strlen(record);
   int offset = stream.tellp();
-  cout<< "cur_off: " << stream.tellp() << endl;
+//  cout<< "cur_off: " << stream.tellp() << endl;
   stream.write((char*)&length, sizeof(short));
   stream.write((char*)&nextRec, sizeof(int));
   stream.put(' ');
