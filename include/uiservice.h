@@ -1,8 +1,10 @@
 //
 // Created by omaro on 12/7/2024.
 //
-#include "AppointmentIndexService.cpp"
-#include "appointmentFileService.cpp"
+#include "AppointmentIndexService.h"
+#include "DoctorIndexService.h"
+#include "appointmentFileService.h"
+#include "doctorFileService.h"
 #include "offsetService.h"
 #ifndef UISERVICE_H
 #define UISERVICE_H

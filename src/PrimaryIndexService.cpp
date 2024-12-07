@@ -31,7 +31,7 @@ int PrimaryIndexService::getById(string id) {
   memset(charId, '\0', 15);
   strcpy(charId, id.c_str());
   int l = 0;
-  int r = 0;
+  int r = primaryIndexs.size() - 1;
   while (l <= r) {
     int mid = l + (r - l) / 2;
     int cmp = strcmp(primaryIndexs[mid].Id, charId);

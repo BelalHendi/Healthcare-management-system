@@ -1,12 +1,16 @@
 //
 // Created by omaro on 12/7/2024.
 //
+
 #include "uiservice.h"
 
 #include <bits/stdc++.h>
 
-#include "DoctorIndexService.cpp"
+#include "AppointmentIndexService.h"
+#include "DoctorIndexService.h"
+#include "appointmentFileService.h"
 #include "doctorFileService.h"
+
 using namespace std;
 
 void uiservice::addDoctor() {
@@ -21,8 +25,8 @@ void uiservice::addDoctor() {
     cout << "the id is being is being used by a diffirent entity!\n";
     return;
   }
-  doctorIndexService.addIndex(id,
-                              doctorFileService.addRecord(id, name, address));
+  int offset = doctorFileService.addRecord(id, name, address);
+  doctorIndexService.addIndex(id, offset );
 }
 
 void uiservice::updateDoctor() {
@@ -71,6 +75,7 @@ void uiservice::addAppointment() {
     cout << "the id is being is being used by a diffirent entity!\n";
     return;
   }
+  cout << "asd" << '\n';
   appointmentIndexService.addIndex(
       id, appointmentFileService.addRecord(id, date, doctorID));
 }

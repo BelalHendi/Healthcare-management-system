@@ -1,3 +1,5 @@
+#ifndef DOCTOR_INDEX_SERVICE_H
+#define DOCTOR_INDEX_SERVICE_H
 #include "PrimaryIndexService.h"
 
 class DoctorIndexService : public PrimaryIndexService {
@@ -5,3 +7,5 @@ class DoctorIndexService : public PrimaryIndexService {
  public:
   DoctorIndexService() : PrimaryIndexService("doctorprimaryindex.txt") {}
 };
+
+#endif  // DOCTOR_INDEX_SERVICE_H

@@ -1,0 +1,15 @@
+# ninja log v6
+52	1481	7553059699973439	CMakeFiles/CLIIIII.dir/src/doctor.cpp.obj	56b5f3ae6d02ce31
+4	328	7553081401848651	build.ninja	cd8f6d6027f071a6
+57	1473	7553059700033108	CMakeFiles/CLIIIII.dir/src/doctorFileService.cpp.obj	c8eda27b534c63ab
+40	1539	7553059699856344	CMakeFiles/CLIIIII.dir/src/appointment.cpp.obj	aefb819f4f7985b1
+46	1485	7553059699914970	CMakeFiles/CLIIIII.dir/src/appointmentFileService.cpp.obj	6925fc3ee978a88c
+83	1604	7553059700290558	CMakeFiles/CLIIIII.dir/src/queryParser.cpp.obj	25a361fee70cea70
+12	847	7553061129421522	CMakeFiles/CLIIIII.dir/src/fileService.cpp.obj	ed404de4cd69506c
+76	1736	7553059700216089	CMakeFiles/CLIIIII.dir/src/offsetService.cpp.obj	f92cce345113468d
+12	1295	7553077995250780	CMakeFiles/CLIIIII.dir/src/PrimaryIndexService.cpp.obj	d5c642ba34647c78
+35	4765	7553059699801618	CMakeFiles/CLIIIII.dir/src/SI_IL.cpp.obj	beea96a45e89077d
+70	4849	7553059700151354	CMakeFiles/CLIIIII.dir/src/main.cpp.obj	e2258b661ee99e88
+1466	5647	7553059714114066	CMakeFiles/CLIIIII.dir/src/secondaryIndex.cpp.obj	192fe6baefcd1c73
+1473	5960	7553059714183655	CMakeFiles/CLIIIII.dir/src/uiservice.cpp.obj	d16bc21a90b35422
+1296	1547	7553078008088446	CLIIIII.exe	fcd01bb8d8ee63c0

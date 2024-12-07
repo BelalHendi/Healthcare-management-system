@@ -1,18 +1,22 @@
 #include "fileService.h"
 
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <strstream>
 
 FileService::FileService(const string &path) : filePath(path) {
-  fstream fout(filePath, ios::in | ios::out | ios::binary);
-  fout.close();
+  fstream fout(filePath, ios::in | ios::out);
+  if (fout.is_open()) {
+    std::cout << "opended" << '\n';
+  }
   if (!fout.is_open()) {
-    fout.open(filePath, ios::out | ios::in | ios::binary);
+    fout.close();
+    fout.open(filePath, ios::out);
     int header = -1;
     fout.write((char *)&header, sizeof(header));
-    fout.close();
   }
+  fout.close();
 }
 
 int FileService::addRecord(const string &field1, const string &field2,
