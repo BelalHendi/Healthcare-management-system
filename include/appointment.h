@@ -1,6 +1,7 @@
 #ifndef _appointment_h
 #define _appointment_h
 #include <fstream>
+using namespace std;
 
 class appointment {
  public:

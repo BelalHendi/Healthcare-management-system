@@ -1,4 +1,5 @@
-#include "doctorIndexService.h"
+#include "PrimaryIndexService.h"
+#include "primaryIndex.h"
 
 #include <algorithm>
 #include <cstring>
@@ -6,11 +7,13 @@
 
 using namespace std;
 
-doctorIndexService::doctorIndexService() {
-  fstream fin("primaryDoctorIndex.txt", ios::in);
+PrimaryIndexService::PrimaryIndexService(string fileName) {
+  this->fileName = fileName;
+  fstream fin(fileName, ios::in);
   if (!fin.is_open()) {
+    fin.open(fileName, ios::out | ios::binary);
     fin.close();
-    fin.open("primaryDoctorIndex.txt", ios::out);
+    return;
   }
   primaryIndex index;
   while (!fin.eof()) {
@@ -22,7 +25,7 @@ doctorIndexService::doctorIndexService() {
   fin.close();
 }
 
-int doctorIndexService::getById(string id) {
+int PrimaryIndexService::getById(string id) {
   char charId[15];
   memset(charId, '\0', 15);
   strcpy(charId, id.c_str());
@@ -44,7 +47,13 @@ int doctorIndexService::getById(string id) {
   return -1;
 }
 
-int doctorIndexService::removeById(string id) {
+void PrimaryIndexService::printIndexs() {
+  for ( primaryIndex index : primaryIndexs ) {
+    cout << index.Id << " " << index.offset << endl;
+  }
+}
+
+int PrimaryIndexService::removeById(string id) {
   char charId[15];
   memset(charId, '\0', 15);
   strcpy(charId, id.c_str());
@@ -66,16 +75,22 @@ int doctorIndexService::removeById(string id) {
     }
   }
 
+  fstream fin(fileName, ios::out);
+  for (int i = 0; i < primaryIndexs.size(); i++) {
+    fin.write(primaryIndexs[i].Id, 15);
+    fin.write((char*)&primaryIndexs[i].offset, sizeof(int));
+  }
+
   return -1;
 }
 
-void doctorIndexService::addIndex(string id, int offset) {
+void PrimaryIndexService::addIndex(string id, int offset) {
   primaryIndex index;
   strcpy(index.Id, id.c_str());
   index.offset = offset;
   primaryIndexs.push_back(index);
   sort(primaryIndexs.begin(), primaryIndexs.end());
-  fstream fin("primaryDoctorIndex.txt", ios::out);
+  fstream fin(fileName, ios::out);
   for (int i = 0; i < primaryIndexs.size(); i++) {
     fin.write(primaryIndexs[i].Id, 15);
     fin.write((char*)&primaryIndexs[i].offset, sizeof(int));
