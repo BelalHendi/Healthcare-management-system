@@ -1,8 +1,8 @@
 #include "doctor.h"
 
 #include <cstring>
-#include <strstream>
 #include <iostream>
+#include <strstream>
 doctor::doctor() {
   memset(id, '\0', sizeof(id));
   memset(name, '\0', sizeof(name));
@@ -21,7 +21,7 @@ int doctor::Write(fstream& stream) {
   strcat(record, "|");
   short length = strlen(record);
   int offset = stream.tellp();
-//  cout<< "cur_off: " << stream.tellp() << endl;
+  //  cout<< "cur_off: " << stream.tellp() << endl;
   stream.write((char*)&length, sizeof(short));
   stream.write((char*)&nextRec, sizeof(int));
   stream.put(' ');

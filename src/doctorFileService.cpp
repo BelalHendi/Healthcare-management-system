@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-DoctorFileService::DoctorFileService() : FileService("../output/doctors.txt") {}
+DoctorFileService::DoctorFileService() : FileService("doctors.txt") {}
 
 int DoctorFileService::writeRecord(fstream &file, const string &field1,
                                    const string &field2, const string &field3) {

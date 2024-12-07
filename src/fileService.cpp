@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <strstream>
 
 FileService::FileService(const string &path) : filePath(path) {
   fstream fout(filePath, ios::in | ios::out | ios::binary);
@@ -73,6 +74,12 @@ string FileService::deleteRecord(int offset) {
   fout.seekp(offset + 2, ios::beg);
   fout.write((char *)&header, sizeof(int));
   fout.put('*');
+  fstream fin(filePath, ios::in);
+  fin.seekg(7, ios::cur);
+  char *record = new char[15];
+  fin.read(record, 15);
+  istrstream strbuff(record);
   string id;
+  strbuff >> id;
   return id;
 }
