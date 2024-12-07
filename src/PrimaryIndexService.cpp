@@ -1,9 +1,10 @@
 #include "PrimaryIndexService.h"
-#include "primaryIndex.h"
 
 #include <algorithm>
 #include <cstring>
 #include <fstream>
+
+#include "primaryIndex.h"
 
 using namespace std;
 
@@ -47,8 +48,16 @@ int PrimaryIndexService::getById(string id) {
   return -1;
 }
 
+vector<int> PrimaryIndexService::getByIds(vector<string> id) {
+  vector<int> offsets;
+  for (string idx : id) {
+    offsets.push_back(getById(idx));
+  }
+  return offsets;
+}
+
 void PrimaryIndexService::printIndexs() {
-  for ( primaryIndex index : primaryIndexs ) {
+  for (primaryIndex index : primaryIndexs) {
     cout << index.Id << " " << index.offset << endl;
   }
 }

@@ -15,12 +15,13 @@ class uiservice {
   AppointmentIndexService appointmentIndexService;
   offsetService offsetService;
   void addDoctor();
+  void updateDoctor();
   void deleteDoctor();
   void addAppointment();
+  void updateAppointment();
   void deleteAppointment();
   void printDoctorInfo();
   void printAppointmentInfo();
-  void menu();
 
  public:
   void run();

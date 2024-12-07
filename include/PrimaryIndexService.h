@@ -14,6 +14,7 @@ class PrimaryIndexService {
   PrimaryIndexService(string fileName);
   void addIndex(string id, int offset);
   int getById(string id);
+  vector<int> getByIds(vector<string> id);
   int removeById(string id);
   void printIndexs();
 };

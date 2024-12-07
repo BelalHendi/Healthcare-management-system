@@ -25,6 +25,27 @@ void uiservice::addDoctor() {
                               doctorFileService.addRecord(id, name, address));
 }
 
+void uiservice::updateDoctor() {
+  cout << "Enter Doctor id :";
+  string id;
+  cin >> id;
+  int offset = doctorIndexService.getById(id);
+  if (offset == -1) {
+    cout << "there is no entity with this id!\n";
+    return;
+  }
+  cout << "Enter new name : ";
+  string name;
+  cin >> name;
+  vector<int> offsets;
+  offsets.push_back(offset);
+  doctor doctor = offsetService.offsetToDoctors(offsets).back();
+  doctorFileService.deleteRecord(offset);
+  doctorIndexService.removeById(id);
+  offset = doctorFileService.addRecord(doctor.id, doctor.name, doctor.address);
+  doctorIndexService.addIndex(id, offset);
+}
+
 void uiservice::deleteDoctor() {
   string id;
   cout << "Enter the id you wish to remove : ";
@@ -54,6 +75,29 @@ void uiservice::addAppointment() {
       id, appointmentFileService.addRecord(id, date, doctorID));
 }
 
+void uiservice::updateAppointment() {
+  cout << "Enter Appointment id :";
+  string id;
+  cin >> id;
+  int offset = appointmentIndexService.getById(id);
+  if (offset == -1) {
+    cout << "there is no entity with this id!\n";
+    return;
+  }
+  cout << "Enter new Date : ";
+  string date;
+  cin >> date;
+  vector<int> offsets;
+  offsets.push_back(offset);
+  appointment appointment = offsetService.offsetToAppointments(offsets).back();
+  appointmentFileService.deleteRecord(offset);
+  appointmentIndexService.removeById(id);
+  offset = appointmentFileService.addRecord(appointment.AppointmentID,
+                                            appointment.AppointmentDate,
+                                            appointment.DoctorID);
+  appointmentIndexService.addIndex(id, offset);
+}
+
 void uiservice::deleteAppointment() {
   string id;
   cout << "Enter the id of the record you wish to delete : " << '\n';
@@ -68,14 +112,40 @@ void uiservice::deleteAppointment() {
 }
 
 void uiservice::printDoctorInfo() {
-  string id;
-  cout << "Enter doctor id : ";
-  cin >> id;
+  string DoctorId;
+  cout << "Enter appointment ID: ";
+  cin >> DoctorId;
+  int offset = appointmentIndexService.getById(DoctorId);
+  vector<int> vec;
+  vec.push_back(offset);
+  vector<doctor> appointments = offsetService.offsetToDoctors(vec);
+
+  for (doctor doc : appointments) {
+    cout << "Doctor Info:" << endl;
+    cout << "ID: " << doc.id << endl;
+    cout << "Name: " << doc.name << endl;
+    cout << "Address: " << doc.address << endl;
+  }
 }
 
-void uiservice::printAppointmentInfo() {}
+void uiservice::printAppointmentInfo() {
+  string appointmentId;
+  cout << "Enter appointment ID: ";
+  cin >> appointmentId;
+  int offset = appointmentIndexService.getById(appointmentId);
+  vector<int> vec;
+  vec.push_back(offset);
+  vector<appointment> appointments = offsetService.offsetToAppointments(vec);
 
-void uiservice::menu() {
+  for (appointment app : appointments) {
+    cout << "Appointment Info:" << endl;
+    cout << "ID: " << app.AppointmentID << endl;
+    cout << "Date: " << app.AppointmentDate << endl;
+    cout << "Doctor ID: " << app.DoctorID << endl;
+  }
+}
+
+void uiservice::run() {
   int choice;
 
   do {
@@ -102,56 +172,25 @@ void uiservice::menu() {
     } else if (choice == 2) {
       addAppointment();
     } else if (choice == 3) {
-      cout << "Updating doctor name (Doctor ID)..." << endl;
-      // Add your logic here
+      updateDoctor();
     } else if (choice == 4) {
-      cout << "Updating appointment date (Appointment ID)..." << endl;
-      // Add your logic here
+      updateAppointment();
     } else if (choice == 5) {
       deleteAppointment();
     } else if (choice == 6) {
       deleteDoctor();
     } else if (choice == 7) {
-      string id;
-      cout << "Enter doctor id : ";
-      cin >> id;
-      int offset = doctorIndexService.getById(id);
-      vector<int> vec;
-      vec.push_back(offset);
-      vector<doctor> doctors = offsetService.offsetToDoctors(vec);
-      for (doctor doc : doctors) {
-        cout << "Doctor Info :" << endl;
-        cout << "ID: " << doc.id << endl;
-        cout << "Name: " << doc.name << endl;
-        cout << "Address: " << doc.address << endl;
-      }
+      printDoctorInfo();
     } else if (choice == 8) {
-      string appointmentId;
-      cout << "Enter appointment ID: ";
-      cin >> appointmentId;
-      int offset = appointmentIndexService.getById(
-          appointmentId);  // Assuming appointmentIndexService.getById() returns
-                           // the offset
-      vector<int> vec;
-      vec.push_back(offset);
-      vector<appointment> appointments = offsetService.offsetToAppointments(
-          vec);  // Retrieve the appointment data
-
-      for (appointment app : appointments) {
-        cout << "Appointment Info:" << endl;
-        cout << "ID: " << app.AppointmentID << endl;
-        cout << "Date: " << app.AppointmentDate << endl;
-        cout << "Doctor ID: " << app.DoctorID << endl;
-      }
+      printAppointmentInfo();
     } else if (choice == 9) {
       cout << "Writing query..." << endl;
     } else if (choice == 10) {
       cout << "Exiting the program. Goodbye!" << endl;
+      break;
     } else {
       cout << "Invalid choice. Please try again." << endl;
     }
 
   } while (choice != 10);  // Exit when choice is 10
 }
-
-void uiservice::run() {}
