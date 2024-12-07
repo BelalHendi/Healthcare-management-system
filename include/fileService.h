@@ -15,9 +15,9 @@ protected:
 public:
     FileService(const string &path);
 
-    void addRecord(const string &field1, const string &field2, const string &field3);
+    int addRecord(const string &field1, const string &field2, const string &field3);
 
-    void deleteRecord(int offset);
+    string deleteRecord(int offset);
 
     void updateRecord(int offset, const string &field1, const string &field2, const string &field3);
 
