@@ -1,55 +1,49 @@
-#include "appointment.h"
+#include "../include/appointment.h"
 
 #include <cstring>
-#include <fstream>
-#include <sstream>
-using namespace std;
+#include <strstream>
 
+using namespace std;
 appointment::appointment() {
-  memset(AppointmentID, '\0', sizeof(AppointmentID));
-  memset(AppointmentDate, '\0', sizeof(AppointmentDate));
-  memset(DoctorID, '\0', sizeof(DoctorID));
+    memset(AppointmentID, '\0', sizeof(AppointmentID));
+    memset(AppointmentDate, '\0', sizeof(AppointmentDate));
+    memset(DoctorID, '\0', sizeof(DoctorID));
+    nextRec = -1;
 }
 
-void appointment::Write(fstream& stream) {
-  char record[61];
-  record[0] = '\0';
-
-  strcat(record, this->AppointmentID);
-  strcat(record, "|");
-  strcat(record, this->AppointmentDate);
-  strcat(record, "|");
-  strcat(record, this->DoctorID);
-  strcat(record, "|");
-
-  short length = strlen(record);
-
-  stream.write((char*)&length, sizeof(short));
-  stream.write(record, length);
+int appointment::Write(fstream& stream) {
+    char* record = new char[65];
+    memset(record, '\0', sizeof(record));
+    strcat(record, this->AppointmentID);
+    strcat(record, "|");
+    strcat(record, this->AppointmentDate);
+    strcat(record, "|");
+    strcat(record, this->DoctorID);
+    strcat(record, "|");
+    short length = strlen(record);
+    int offset = stream.tellp();
+    //  cout<< "cur_off: " << stream.tellp() << endl;
+    stream.write((char*)&length, sizeof(short));
+    stream.write((char*)&nextRec, sizeof(int));
+    stream.put(' ');
+    stream.write(record, length);
+    delete[] record;
+    return offset;
 }
 
 void appointment::Read(fstream& stream) {
-  short length;
-  stream.read((char*)&length, sizeof(short));
-
-  char* record = new char[length + 1];
-  stream.read(record, length);
-  record[length] = '\0';
-
-  stringstream strbuff(record);
-  string field;
-
-  getline(strbuff, field, '|');
-  strncpy(this->AppointmentID, field.c_str(), sizeof(AppointmentID) - 1);
-  this->AppointmentID[sizeof(AppointmentID) - 1] = '\0';
-
-  getline(strbuff, field, '|');
-  strncpy(this->AppointmentDate, field.c_str(), sizeof(AppointmentDate) - 1);
-  this->AppointmentDate[sizeof(AppointmentDate) - 1] = '\0';
-
-  getline(strbuff, field, '|');
-  strncpy(this->DoctorID, field.c_str(), sizeof(DoctorID) - 1);
-  this->DoctorID[sizeof(DoctorID) - 1] = '\0';
-
-  delete[] record;
+    short length;
+    stream.read((char*)&length, sizeof(short));
+    stream.seekg(5, ios::beg);
+    char* record = new char[length];
+    stream.read(record, length);
+    istrstream strbuff(record);
+    string str;
+    strbuff >> str;
+    strcpy(this->AppointmentID, str.c_str());
+    strbuff >> str;
+    strcpy(this->AppointmentDate, str.c_str());
+    strbuff >> str;
+    strcpy(this->DoctorID, str.c_str());
+    delete[] record;
 }
