@@ -12,14 +12,12 @@ PrimaryIndexService::PrimaryIndexService(string fileName) {
   this->fileName = fileName;
   fstream fin(fileName, ios::in);
   if (!fin.is_open()) {
-    fin.open(fileName, ios::out | ios::binary);
+    fin.open(fileName, ios::out );
     fin.close();
     return;
   }
   primaryIndex index;
-  while (!fin.eof()) {
-    fin.read(index.Id, 15);
-    fin.read((char*)&index.offset, sizeof(index.offset));
+  while (fin.read(index.Id, 15) && fin.read((char*)&index.offset, sizeof(index.offset)) ) {
     primaryIndexs.push_back(index);
   }
 
@@ -68,15 +66,14 @@ int PrimaryIndexService::removeById(string id) {
   strcpy(charId, id.c_str());
   int l = 0;
   int r = primaryIndexs.size() - 1;
-
+  int offset = -1 ;
   while (l <= r) {
     int mid = l + (r - l) / 2;
     int cmp = strcmp(primaryIndexs[mid].Id, charId);
-
     if (cmp == 0) {
-      int offset = primaryIndexs[mid].offset;
+      offset = primaryIndexs[mid].offset;
       primaryIndexs.erase(primaryIndexs.begin() + mid);
-      return offset;
+      break;
     } else if (cmp < 0) {
       l = mid + 1;
     } else {
@@ -90,7 +87,7 @@ int PrimaryIndexService::removeById(string id) {
     fin.write((char*)&primaryIndexs[i].offset, sizeof(int));
   }
 
-  return -1;
+  return offset;
 }
 
 void PrimaryIndexService::addIndex(string id, int offset) {
