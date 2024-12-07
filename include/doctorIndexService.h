@@ -7,12 +7,13 @@
 using namespace std;
 class doctorIndexService {
  private:
-  vector<primaryIndex> priamryIndexs;
+  vector<primaryIndex> primaryIndexs;
 
  public:
   doctorIndexService();
   void addIndex(string id, int offset);
   int getById(string id);
+  int removeById(string id);
 };
 
 #endif
