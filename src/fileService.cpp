@@ -14,7 +14,7 @@ FileService::FileService(const string &path) : filePath(path) {
     }
 }
 
-void FileService::addRecord(const string &field1, const string &field2, const string &field3) {
+int FileService::addRecord(const string &field1, const string &field2, const string &field3) {
     short len = field1.size() + field2.size() + field3.size() + 3;
     int header = -1;
     fstream fout(filePath, ios::in | ios::out | ios::binary);
@@ -25,8 +25,7 @@ void FileService::addRecord(const string &field1, const string &field2, const st
 
     if (header == -1) {
         fout.seekp(0, ios::end);
-        writeRecord(fout, field1, field2, field3);
-        return;
+        return writeRecord(fout, field1, field2, field3);
     } else {
         while (header != -1 && !found) {
             fout.seekg(header, ios::beg);
@@ -45,7 +44,6 @@ void FileService::addRecord(const string &field1, const string &field2, const st
         int nextAvailable;
         fout.read((char *)&nextAvailable, sizeof(nextAvailable));
         fout.seekp(header, ios::beg);
-        writeRecord(fout, field1, field2, field3);
         if (freeSpace - len >= 5) {
             short newSpace = freeSpace - len;
             fout.write((char *)&newSpace, sizeof(newSpace));
@@ -57,13 +55,15 @@ void FileService::addRecord(const string &field1, const string &field2, const st
             fout.seekp(prev + 2, ios::beg);
             fout.write((char *)&nextAvailable, sizeof(nextAvailable));
         }
+        return writeRecord(fout, field1, field2, field3);
     } else {
         fout.seekp(0, ios::end);
-        writeRecord(fout, field1, field2, field3);
+        return writeRecord(fout, field1, field2, field3);
+
     }
 }
 
-void FileService::deleteRecord(int offset) {
+string FileService::deleteRecord(int offset) {
     int header = -1;
     fstream fout(filePath, ios::in | ios::out | ios::binary);
     fout.seekp(0, ios::beg);
@@ -73,4 +73,6 @@ void FileService::deleteRecord(int offset) {
     fout.seekp(offset + 2, ios::beg);
     fout.write((char *)&header, sizeof(int));
     fout.put('*');
+    string id;
+    return id;
 }
