@@ -4,7 +4,28 @@
 #include "uiservice.h"
 
 #include <bits/stdc++.h>
+
+#include "DoctorIndexService.cpp"
+#include "doctorFileService.h"
 using namespace std;
+
+void uiservice::addDoctor() {
+  string id, name, address;
+  cout << "Enter id , name , address : ";
+  cin >> id >> name >> address;
+  id = id.substr(0, 15);
+  name = name.substr(0, 30);
+  address = address.substr(0, 30);
+  DoctorIndexService indexService;
+  DoctorFileService fileService;
+  if (indexService.getById(id) != -1) {
+    cout << "the id is being is being used by a diffirent entity!";
+    return;
+  }
+
+  indexService.addIndex(id, fileService.addRecord(id, name, address));
+}
+
 void uiservice::menu() {
   int choice;
 
@@ -29,8 +50,7 @@ void uiservice::menu() {
     // Handle options with switch
     switch (choice) {
       case 1:
-        cout << "Adding new doctor..." << endl;
-        // Add your logic here
+
         break;
       case 2:
         cout << "Adding new appointment..." << endl;

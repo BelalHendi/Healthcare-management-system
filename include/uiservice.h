@@ -5,15 +5,13 @@
 #ifndef UISERVICE_H
 #define UISERVICE_H
 
-
-
 class uiservice {
-private:
-    void menu() ;
-public:
-    void run();
+ private:
+  void addDoctor();
+  void menu();
+
+ public:
+  void run();
 };
 
-
-
-#endif //UISERVICE_H
+#endif  // UISERVICE_H
