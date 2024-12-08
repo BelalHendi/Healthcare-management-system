@@ -33,16 +33,17 @@ int doctor::Write(fstream& stream) {
 void doctor::Read(fstream& stream) {
   short length;
   stream.read((char*)&length, sizeof(short));
-  stream.seekg(5, ios::beg);
-  char* record = new char[length];
+  stream.seekg(5, ios::cur);
+  char* record = new char[length+1];
+  record[length] = '\0';
   stream.read(record, length);
   istrstream strbuff(record);
   string str;
-  strbuff >> str;
+  getline(strbuff , str , '|') ;
   strcpy(this->id, str.c_str());
-  strbuff >> str;
+  getline(strbuff , str , '|') ;
   strcpy(this->name, str.c_str());
-  strbuff >> str;
+  getline(strbuff , str , '|') ;
   strcpy(this->address, str.c_str());
   delete[] record;
 }

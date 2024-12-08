@@ -39,11 +39,11 @@ void appointment::Read(fstream& stream) {
   stream.read(record, length);
   istrstream strbuff(record);
   string str;
-  strbuff >> str;
+  getline(strbuff , str , '|') ;
   strcpy(this->AppointmentID, str.c_str());
-  strbuff >> str;
+  getline(strbuff , str , '|') ;
   strcpy(this->AppointmentDate, str.c_str());
-  strbuff >> str;
+  getline(strbuff , str , '|') ;
   strcpy(this->DoctorID, str.c_str());
   delete[] record;
 }

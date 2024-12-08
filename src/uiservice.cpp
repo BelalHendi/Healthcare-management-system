@@ -120,7 +120,7 @@ void uiservice::printDoctorInfo() {
   string DoctorId;
   cout << "Enter appointment ID: ";
   cin >> DoctorId;
-  int offset = appointmentIndexService.getById(DoctorId);
+  int offset = doctorIndexService.getById(DoctorId);
   vector<int> vec;
   vec.push_back(offset);
   vector<doctor> appointments = offsetService.offsetToDoctors(vec);
@@ -156,12 +156,12 @@ void uiservice::run() {
   do {
     // Display the menu
     cout << "\nMenu Options:" << endl;
-    cout << "1. Add New Doctor" << endl;       // done
-    cout << "2. Add New Appointment" << endl;  // done
+    cout << "1. Add New Doctor" << endl;       // done // tested
+    cout << "2. Add New Appointment" << endl;  // done // tested
     cout << "3. Update Doctor Name (Doctor ID)" << endl;
     cout << "4. Update Appointment Date (Appointment ID)" << endl;
-    cout << "5. Delete Appointment (Appointment ID)" << endl;      // done
-    cout << "6. Delete Doctor (Doctor ID)" << endl;                // done
+    cout << "5. Delete Appointment (Appointment ID)" << endl;      // done // tested
+    cout << "6. Delete Doctor (Doctor ID)" << endl;                // done // tested
     cout << "7. Print Doctor Info (Doctor ID)" << endl;            // done
     cout << "8. Print Appointment Info (Appointment ID)" << endl;  // done
     cout << "9. Write Query" << endl;

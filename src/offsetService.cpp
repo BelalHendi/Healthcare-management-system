@@ -19,7 +19,7 @@ vector<doctor> offsetService::offsetToDoctors(vector<int> offsets) {
   vector<doctor> doctors;
   for (int i = 0; i < offsets.size(); i++) {
     doctor doctor;
-    fin.seekg(offsets[i]);
+    fin.seekg(offsets[i] , ios::beg);
     doctor.Read(fin);
     doctors.push_back(doctor);
   }

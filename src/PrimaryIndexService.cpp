@@ -33,7 +33,6 @@ int PrimaryIndexService::getById(string id) {
   while (l <= r) {
     int mid = l + (r - l) / 2;
     int cmp = strcmp(primaryIndexs[mid].Id, charId);
-
     if (cmp == 0) {
       return primaryIndexs[mid].offset;
     } else if (cmp < 0) {
