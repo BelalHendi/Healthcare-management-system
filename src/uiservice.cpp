@@ -46,7 +46,7 @@ void uiservice::updateDoctor() {
   doctor doctor = offsetService.offsetToDoctors(offsets).back();
   doctorFileService.deleteRecord(offset);
   doctorIndexService.removeById(id);
-  offset = doctorFileService.addRecord(doctor.id, doctor.name, doctor.address);
+  offset = doctorFileService.addRecord(doctor.id, name, doctor.address);
   doctorIndexService.addIndex(id, offset);
 }
 
@@ -98,7 +98,7 @@ void uiservice::updateAppointment() {
   appointmentFileService.deleteRecord(offset);
   appointmentIndexService.removeById(id);
   offset = appointmentFileService.addRecord(appointment.AppointmentID,
-                                            appointment.AppointmentDate,
+                                            date,
                                             appointment.DoctorID);
   appointmentIndexService.addIndex(id, offset);
 }
@@ -118,7 +118,7 @@ void uiservice::deleteAppointment() {
 
 void uiservice::printDoctorInfo() {
   string DoctorId;
-  cout << "Enter appointment ID: ";
+  cout << "Enter doctor id: ";
   cin >> DoctorId;
   int offset = doctorIndexService.getById(DoctorId);
   vector<int> vec;
@@ -158,14 +158,14 @@ void uiservice::run() {
     cout << "\nMenu Options:" << endl;
     cout << "1. Add New Doctor" << endl;       // done // tested
     cout << "2. Add New Appointment" << endl;  // done // tested
-    cout << "3. Update Doctor Name (Doctor ID)" << endl;
-    cout << "4. Update Appointment Date (Appointment ID)" << endl;
+    cout << "3. Update Doctor Name (Doctor ID)" << endl;  // done // tested
+    cout << "4. Update Appointment Date (Appointment ID)" << endl;  // done // tested
     cout << "5. Delete Appointment (Appointment ID)" << endl;      // done // tested
     cout << "6. Delete Doctor (Doctor ID)" << endl;                // done // tested
-    cout << "7. Print Doctor Info (Doctor ID)" << endl;            // done
-    cout << "8. Print Appointment Info (Appointment ID)" << endl;  // done
+    cout << "7. Print Doctor Info (Doctor ID)" << endl;            // done // tested
+    cout << "8. Print Appointment Info (Appointment ID)" << endl;  // done // tested
     cout << "9. Write Query" << endl;
-    cout << "10. Exit" << endl;  // done
+    cout << "10. Exit" << endl;  // done // tested
 
     // Get user choice
     cout << "Enter your choice: ";
