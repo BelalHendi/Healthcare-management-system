@@ -20,19 +20,19 @@ void queryParser::handleSelect() {
     string conditionField = tokens[5];
     string conditionVal = tokens[7];
     if(table == "Doctors") {
-        DoctorIndexService doctorservice;
+
         vector<doctor> docs;
         vector<int> id;
         offsetService offs;
         if(conditionField == "DoctorID"){
-            id.push_back(doctorservice.getById(conditionVal));
+            id.push_back(DoctorIndexService::getInstance()->getById(conditionVal));
             docs = offs.offsetToDoctors(id);
         } else {
             vector<string> secID;
             SI secIndex(DOCTOR);
             secID = secIndex.search(conditionField);
             for (int i = 0; i < secID.size(); i++) {
-                id.push_back(doctorservice.getById(secID[i]));
+                id.push_back(DoctorIndexService::getInstance()->getById(secID[i]));
             }
             docs = offs.offsetToDoctors(id);
         }
@@ -54,19 +54,19 @@ void queryParser::handleSelect() {
             }
         }
     } else if(table == "Appointments") {
-        AppointmentIndexService appointmentservice;
+
         vector<appointment> docs;
         offsetService offs;
         vector<int> id;
         if(conditionField == "AppointmentID"){
-            id.push_back(appointmentservice.getById(conditionVal));
+            id.push_back(AppointmentIndexService::getInstance()->getById(conditionVal));
             docs = offs.offsetToAppointments(id);
         } else {
             vector<string> secID;
             SI secIndex(APPOINTMENT);
             secID = secIndex.search(conditionField);
             for (int i = 0; i < secID.size(); i++) {
-                id.push_back(appointmentservice.getById(secID[i]));
+                id.push_back(AppointmentIndexService::getInstance()->getById(secID[i]));
             }
             docs = offs.offsetToAppointments(id);
         }
