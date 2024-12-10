@@ -1,0 +1,3 @@
+C:/Users/yussu/OneDrive/Desktop/healthC/Healthcare-management-system/cmake-build-debug/CMakeFiles/CLIIIII.dir
+C:/Users/yussu/OneDrive/Desktop/healthC/Healthcare-management-system/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/yussu/OneDrive/Desktop/healthC/Healthcare-management-system/cmake-build-debug/CMakeFiles/rebuild_cache.dir
