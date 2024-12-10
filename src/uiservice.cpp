@@ -129,6 +129,14 @@ void uiservice::printDoctorInfo() {
     cout << "Address: " << doc.address << endl;
   }
 }
+void uiservice::writeQuery() {
+  cin.ignore();
+  cout << "Write your query: ";;
+  string query;
+  getline(cin, query);
+  parse.querySplitter(query);
+  parse.parseQuery();
+}
 
 void uiservice::printAppointmentInfo() {
   string appointmentId;
@@ -186,7 +194,7 @@ void uiservice::run() {
     } else if (choice == 8) {
       printAppointmentInfo();
     } else if (choice == 9) {
-      cout << "Writing query..." << endl;
+      writeQuery();
     } else if (choice == 10) {
       cout << "Exiting the program. Goodbye!" << endl;
       break;

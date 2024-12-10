@@ -10,15 +10,15 @@
 #include "offsetService.h"
 using namespace std;
 
-queryParser::queryParser(std::string &query) {
-    this->tokens = splitCommand(query);
+void queryParser::querySplitter(std::string &query) {
+    this->splitCommand(query);
 }
 
-void queryParser::handleSelect() {
-    string field = tokens[1];
-    string table = tokens[3];
-    string conditionField = tokens[5];
-    string conditionVal = tokens[7];
+void queryParser::parseQuery() {
+    string field = this->tokens[1];
+    string table = this->tokens[3];
+    string conditionField = this->tokens[5];
+    string conditionVal = this->tokens[7];
     if(table == "Doctors") {
 
         vector<doctor> docs;
@@ -30,7 +30,7 @@ void queryParser::handleSelect() {
         } else {
             vector<string> secID;
             SI secIndex(DOCTOR);
-            secID = secIndex.search(conditionField);
+            secID = secIndex.search(conditionVal);
             for (int i = 0; i < secID.size(); i++) {
                 id.push_back(DoctorIndexService::getInstance()->getById(secID[i]));
             }
@@ -91,8 +91,7 @@ void queryParser::handleSelect() {
 }
 
 
-vector<string> queryParser::splitCommand(const string& input) {
-    vector<string> parts;
+void queryParser::splitCommand(const string& input) {
     string currentPart;
     bool insideQuotes = false;
 
@@ -101,7 +100,7 @@ vector<string> queryParser::splitCommand(const string& input) {
             insideQuotes = !insideQuotes; // Toggle the insideQuotes flag
         } else if (ch == ' ' && !insideQuotes) {
             if (!currentPart.empty()) {
-                parts.push_back(currentPart);
+                this->tokens.push_back(currentPart);
                 currentPart.clear();
             }
         } else {
@@ -110,8 +109,6 @@ vector<string> queryParser::splitCommand(const string& input) {
     }
 
     if (!currentPart.empty()) {
-        parts.push_back(currentPart);
+        this->tokens.push_back(currentPart);
     }
-
-    return parts;
 }
