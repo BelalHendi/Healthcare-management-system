@@ -7,9 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 file(GLOB SOURCES "src/*.cpp")
 
 # Create an executable
-add_executable(CLIIIII ${SOURCES}
-        include/DoctorSecondryIndexService.h
-        include/appointmentSecondryIndexService.h)
+add_executable(CLIIIII ${SOURCES})
 
 # Include the headers directory
 target_include_directories(CLIIIII PRIVATE include)

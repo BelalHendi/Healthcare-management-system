@@ -1,19 +1,13 @@
-#ifndef DOCTOR_INDEX_SERVICE_H
-#define DOCTOR_INDEX_SERVICE_H
+#ifndef DoctorIndexService_h
+#define DoctorIndexService_h
 #include "PrimaryIndexService.h"
 
 class DoctorIndexService : public PrimaryIndexService {
  private:
     static DoctorIndexService *instance;
-    DoctorIndexService() : PrimaryIndexService("doctorprimaryindex.txt") {}
+    DoctorIndexService() ;
 public:
-    static DoctorIndexService* getInstance() {
-        if ( instance == nullptr )
-            instance = new DoctorIndexService();
-        return instance ;
-    }
+    static DoctorIndexService* getInstance() ;
 };
 
-DoctorIndexService* DoctorIndexService::instance = nullptr ;
-
-#endif  // DOCTOR_INDEX_SERVICE_H
+#endif

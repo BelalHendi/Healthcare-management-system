@@ -1,24 +1,12 @@
-//
-// Created by omaro on 12/10/2024.
-//
-
-#ifndef APPOINTMENTSECONDRYINDEXSERVICE_H
-#define APPOINTMENTSECONDRYINDEXSERVICE_H
+#ifndef _appointmentSecondryIndexService_h_
+#define _appointmentSecondryIndexService_h_
 #include "SI.h"
-
 class appointmentSecondryIndexService : public SI{
 private :
     static appointmentSecondryIndexService* instance ;
-    appointmentSecondryIndexService() : SI(APPOINTMENT) {}
+    appointmentSecondryIndexService() ;
 public:
-    static appointmentSecondryIndexService* getInstance() {
-        if ( instance == nullptr ) {
-            instance = new appointmentSecondryIndexService() ;
-        }
-        return instance ;
-    }
+    static appointmentSecondryIndexService* getInstance() ;
 };
+#endif
 
-appointmentSecondryIndexService* appointmentSecondryIndexService::instance = nullptr ;
-
-#endif //APPOINTMENTSECONDRYINDEXSERVICE_H
