@@ -10,8 +10,10 @@
 #include <vector>
 using namespace std;
 class queryParser {
-public:
+    private:
     vector<string> tokens;
+    vector<string> splitCommand(const string &query);
+public:
     queryParser(string &query);
     void handleSelect();
 };
