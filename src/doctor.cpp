@@ -11,7 +11,7 @@ doctor::doctor() {
 }
 
 int doctor::Write(fstream& stream) {
-  char* record = new char[80];
+  char* record = new char[100];
   memset(record, '\0', sizeof(record));
   strcat(record, this->id);
   strcat(record, "|");

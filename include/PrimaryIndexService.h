@@ -8,6 +8,9 @@ using namespace std;
 class PrimaryIndexService {
  private:
   vector<primaryIndex> primaryIndexs;
+  int insertPrimaryIndex( primaryIndex index ) ;
+  void bubbleDown( int RRN ) ;
+  void bubbleup( int RRN ) ;
   string fileName;
 
  public:

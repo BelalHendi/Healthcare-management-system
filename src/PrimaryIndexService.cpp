@@ -8,6 +8,34 @@
 
 using namespace std;
 
+int PrimaryIndexService::insertPrimaryIndex( primaryIndex index ) {
+  primaryIndexs.push_back(index);
+  int j = primaryIndexs.size() - 2;
+  while ( j >= 0 && strcmp(primaryIndexs[j].Id, primaryIndexs[j + 1].Id) > 0  ) {
+    swap(primaryIndexs[j], primaryIndexs[j + 1]);
+    j-- ;
+  }
+  return j + 1 ;
+}
+
+void PrimaryIndexService::bubbleDown( int RRN ) {
+  fstream file ( fileName , ios_base::in | ios_base::out );
+  file.seekp ( RRN * 19 );
+  for ( int i = RRN ; i < primaryIndexs.size() ; i++ ) {
+    file.write( primaryIndexs[i].Id , 15 );
+    file.write( (char*)& primaryIndexs[i].offset , sizeof(int) );
+  }
+
+  file.close() ;
+}
+void PrimaryIndexService::bubbleup( int RRN ) {
+  ofstream trunc (fileName, ios::out ) ;
+  for ( const primaryIndex& index : primaryIndexs ) {
+    trunc.write(index.Id , 15 );
+    trunc.write( (char*)& index.offset , sizeof(int) );
+  }
+}
+
 PrimaryIndexService::PrimaryIndexService(string fileName) {
   this->fileName = fileName;
   fstream fin(fileName, ios::in);
@@ -66,8 +94,9 @@ int PrimaryIndexService::removeById(string id) {
   int l = 0;
   int r = primaryIndexs.size() - 1;
   int offset = -1 ;
+  int mid = 0;
   while (l <= r) {
-    int mid = l + (r - l) / 2;
+    mid = ( l + r ) / 2;
     int cmp = strcmp(primaryIndexs[mid].Id, charId);
     if (cmp == 0) {
       offset = primaryIndexs[mid].offset;
@@ -80,11 +109,7 @@ int PrimaryIndexService::removeById(string id) {
     }
   }
 
-  fstream fin(fileName, ios::out);
-  for (int i = 0; i < primaryIndexs.size(); i++) {
-    fin.write(primaryIndexs[i].Id, 15);
-    fin.write((char*)&primaryIndexs[i].offset, sizeof(int));
-  }
+  bubbleup( mid );
 
   return offset;
 }
@@ -93,11 +118,6 @@ void PrimaryIndexService::addIndex(string id, int offset) {
   primaryIndex index;
   strcpy(index.Id, id.c_str());
   index.offset = offset;
-  primaryIndexs.push_back(index);
-  sort(primaryIndexs.begin(), primaryIndexs.end());
-  fstream fin(fileName, ios::out);
-  for (int i = 0; i < primaryIndexs.size(); i++) {
-    fin.write(primaryIndexs[i].Id, 15);
-    fin.write((char*)&primaryIndexs[i].offset, sizeof(int));
-  }
+  const int RRN = insertPrimaryIndex(index) ;
+  bubbleDown( RRN ) ;
 }

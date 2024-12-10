@@ -12,7 +12,7 @@ appointment::appointment() {
 }
 
 int appointment::Write(fstream& stream) {
-  char* record = new char[65];
+  char* record = new char[100];
   memset(record, '\0', sizeof(record));
   strcat(record, this->AppointmentID);
   strcat(record, "|");
@@ -34,7 +34,7 @@ int appointment::Write(fstream& stream) {
 void appointment::Read(fstream& stream) {
   short length;
   stream.read((char*)&length, sizeof(short));
-  stream.seekg(5, ios::beg);
+  stream.seekg(5, ios::cur);
   char* record = new char[length];
   stream.read(record, length);
   istrstream strbuff(record);
