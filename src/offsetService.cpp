@@ -25,3 +25,4 @@ vector<doctor> offsetService::offsetToDoctors(vector<int> offsets) {
   }
   return doctors;
 }
+
