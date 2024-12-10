@@ -4,9 +4,11 @@
 
 class AppointmentIndexService : public PrimaryIndexService {
  private:
+    static AppointmentIndexService* instance ;
+    AppointmentIndexService();
  public:
-  AppointmentIndexService()
-      : PrimaryIndexService("appointmentIndexService.txt") {}
+    static AppointmentIndexService* getInstance() ;
 };
+
 
 #endif

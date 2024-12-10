@@ -17,19 +17,20 @@ void uiservice::addDoctor() {
   name = name.substr(0, 30);
   address = address.substr(0, 30);
 
-  if (doctorIndexService.getById(id) != -1) {
+  if (DoctorIndexService::getInstance()->getById(id) != -1) {
     cout << "the id is being is being used by a diffirent entity!\n";
     return;
   }
   int offset = doctorFileService.addRecord(id, name, address);
-  doctorIndexService.addIndex(id, offset );
+  DoctorIndexService::getInstance()->addIndex(id, offset );
+
 }
 
 void uiservice::updateDoctor() {
   cout << "Enter Doctor id :";
   string id;
   cin >> id;
-  int offset = doctorIndexService.getById(id);
+  int offset = DoctorIndexService::getInstance()->getById(id);
   if (offset == -1) {
     cout << "there is no entity with this id!\n";
     return;
@@ -41,21 +42,21 @@ void uiservice::updateDoctor() {
   offsets.push_back(offset);
   doctor doctor = offsetService.offsetToDoctors(offsets).back();
   doctorFileService.deleteRecord(offset);
-  doctorIndexService.removeById(id);
+  DoctorIndexService::getInstance()->removeById(id);
   offset = doctorFileService.addRecord(doctor.id, name, doctor.address);
-  doctorIndexService.addIndex(id, offset);
+  DoctorIndexService::getInstance()->addIndex(id, offset);
 }
 
 void uiservice::deleteDoctor() {
   string id;
   cout << "Enter the id you wish to remove : ";
   cin >> id;
-  int offset = doctorIndexService.getById(id);
+  int offset = DoctorIndexService::getInstance()->getById(id);
   if (offset == -1) {
     cout << "there is no entity with this id!\n";
     return;
   }
-  doctorIndexService.removeById(id);
+  DoctorIndexService::getInstance()->removeById(id);
   doctorFileService.deleteRecord(offset);
 }
 
@@ -67,12 +68,12 @@ void uiservice::addAppointment() {
   date = date.substr(0, 30);
   doctorID = doctorID.substr(0, 15);
 
-  if (appointmentIndexService.getById(id) != -1) {
+  if (AppointmentIndexService::getInstance()->getById(id) != -1) {
     cout << "the id is being is being used by a diffirent entity!\n";
     return;
   }
   cout << "asd" << '\n';
-  appointmentIndexService.addIndex(
+  AppointmentIndexService::getInstance()->addIndex(
       id, appointmentFileService.addRecord(id, date, doctorID));
 }
 
@@ -80,7 +81,7 @@ void uiservice::updateAppointment() {
   cout << "Enter Appointment id :";
   string id;
   cin >> id;
-  int offset = appointmentIndexService.getById(id);
+  int offset = AppointmentIndexService::getInstance()->getById(id);
   if (offset == -1) {
     cout << "there is no entity with this id!\n";
     return;
@@ -92,23 +93,23 @@ void uiservice::updateAppointment() {
   offsets.push_back(offset);
   appointment appointment = offsetService.offsetToAppointments(offsets).back();
   appointmentFileService.deleteRecord(offset);
-  appointmentIndexService.removeById(id);
+  AppointmentIndexService::getInstance()->removeById(id);
   offset = appointmentFileService.addRecord(appointment.AppointmentID,
                                             date,
                                             appointment.DoctorID);
-  appointmentIndexService.addIndex(id, offset);
+  AppointmentIndexService::getInstance()->addIndex(id, offset);
 }
 
 void uiservice::deleteAppointment() {
   string id;
   cout << "Enter the id of the record you wish to delete : " << '\n';
   cin >> id;
-  int offset = appointmentIndexService.getById(id);
+  int offset = AppointmentIndexService::getInstance()->getById(id);
   if (offset == -1) {
     cout << "there is no entity with this id!\n";
     return;
   }
-  appointmentIndexService.removeById(id);
+  AppointmentIndexService::getInstance()->removeById(id);
   appointmentFileService.deleteRecord(offset);
 }
 
@@ -116,7 +117,7 @@ void uiservice::printDoctorInfo() {
   string DoctorId;
   cout << "Enter doctor id: ";
   cin >> DoctorId;
-  int offset = doctorIndexService.getById(DoctorId);
+  int offset = DoctorIndexService::getInstance()->getById(DoctorId);
   vector<int> vec;
   vec.push_back(offset);
   vector<doctor> appointments = offsetService.offsetToDoctors(vec);
@@ -133,7 +134,7 @@ void uiservice::printAppointmentInfo() {
   string appointmentId;
   cout << "Enter appointment ID: ";
   cin >> appointmentId;
-  int offset = appointmentIndexService.getById(appointmentId);
+  int offset = AppointmentIndexService::getInstance()->getById(appointmentId);
   vector<int> vec;
   vec.push_back(offset);
   vector<appointment> appointments = offsetService.offsetToAppointments(vec);

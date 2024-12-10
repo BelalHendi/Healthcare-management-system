@@ -6,15 +6,15 @@
 #include "appointmentFileService.h"
 #include "doctorFileService.h"
 #include "offsetService.h"
+#include "SI.h"
+#include "dataFileType.h"
 #ifndef UISERVICE_H
 #define UISERVICE_H
 
 class uiservice {
  private:
-  DoctorIndexService doctorIndexService;
   DoctorFileService doctorFileService;
   AppointmentFileService appointmentFileService;
-  AppointmentIndexService appointmentIndexService;
   offsetService offsetService;
   void addDoctor();
   void updateDoctor();

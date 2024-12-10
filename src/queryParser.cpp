@@ -1,7 +1,9 @@
 #include <iostream>
 #include "queryParser.h"
 
+#include <AppointmentIndexService.h>
 #include <DoctorIndexService.h>
+#include <SI.h>
 
 #include "PrimaryIndexService.h"
 #include "doctorFileService.h"
@@ -16,33 +18,74 @@ void queryParser::handleSelect() {
     string field = tokens[1];
     string table = tokens[3];
     string conditionField = tokens[5];
-    string conditionVal = tokens[7].substr(1, tokens[7].size() - 2);
+    string conditionVal = tokens[7];
     if(table == "Doctors") {
-        DoctorIndexService doctorservice;
+
+        vector<doctor> docs;
+        vector<int> id;
+        offsetService offs;
         if(conditionField == "DoctorID"){
-            vector<int> id;
-            id.push_back(doctorservice.getById(conditionVal));
-            offsetService offs;
-            vector<doctor> docs = offs.offsetToDoctors(id);
-            if(field == "all") {
-                for(int i = 0; i < docs.size(); i++) {
-                    cout << "ID: " << docs[i].id << "|" << "Name: " << docs[i].name << "|" << "Address: " << docs[i].address << endl;
-                }
-            } else if(field == "DoctorName") {
-                for(int i = 0; i < docs.size(); i++) {
-                    cout << "Name: " << docs[i].name << endl;
-                }
-            } else if(field == "DoctorAddress") {
-                for(int i = 0; i < docs.size(); i++) {
-                    cout << "Address: " << docs[i].address << endl;
-                }
-            } else if(field == "DoctorID") {
-                for(int i = 0; i < docs.size(); i++) {
-                    cout << "ID: " << docs[i].id << endl;
-                }
-            }
+            id.push_back(DoctorIndexService::getInstance()->getById(conditionVal));
+            docs = offs.offsetToDoctors(id);
         } else {
-            vector<int> secID;
+            vector<string> secID;
+            SI secIndex(DOCTOR);
+            secID = secIndex.search(conditionField);
+            for (int i = 0; i < secID.size(); i++) {
+                id.push_back(DoctorIndexService::getInstance()->getById(secID[i]));
+            }
+            docs = offs.offsetToDoctors(id);
+        }
+        if(field == "all") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "ID: " << docs[i].id << "|" << "Name: " << docs[i].name << "|" << "Address: " << docs[i].address << endl;
+            }
+        } else if(field == "DoctorName") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "Name: " << docs[i].name << endl;
+            }
+        } else if(field == "DoctorAddress") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "Address: " << docs[i].address << endl;
+            }
+        } else if(field == "DoctorID") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "ID: " << docs[i].id << endl;
+            }
+        }
+    } else if(table == "Appointments") {
+
+        vector<appointment> docs;
+        offsetService offs;
+        vector<int> id;
+        if(conditionField == "AppointmentID"){
+            id.push_back(AppointmentIndexService::getInstance()->getById(conditionVal));
+            docs = offs.offsetToAppointments(id);
+        } else {
+            vector<string> secID;
+            SI secIndex(APPOINTMENT);
+            secID = secIndex.search(conditionField);
+            for (int i = 0; i < secID.size(); i++) {
+                id.push_back(AppointmentIndexService::getInstance()->getById(secID[i]));
+            }
+            docs = offs.offsetToAppointments(id);
+        }
+        if(field == "all") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "ID: " << docs[i].AppointmentID << "|" << "Appointment Date: " << docs[i].AppointmentDate << "|" << "DoctorID: " << docs[i].DoctorID << endl;
+            }
+        } else if(field == "AppointmentID") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout <<  "ID: " << docs[i].AppointmentID << endl;
+            }
+        } else if(field == "AppointmentDate") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "Appointment Date: " << docs[i].AppointmentDate << endl;
+            }
+        } else if(field == "DoctorID") {
+            for(int i = 0; i < docs.size(); i++) {
+                cout << "DoctorID: " << docs[i].DoctorID << endl;
+            }
         }
     }
 }
