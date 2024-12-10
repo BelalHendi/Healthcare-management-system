@@ -1,7 +1,3 @@
-//
-// Created by omaro on 12/7/2024.
-//
-
 #include "uiservice.h"
 
 #include <bits/stdc++.h>
