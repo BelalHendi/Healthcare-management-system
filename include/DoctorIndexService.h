@@ -4,8 +4,16 @@
 
 class DoctorIndexService : public PrimaryIndexService {
  private:
- public:
-  DoctorIndexService() : PrimaryIndexService("doctorprimaryindex.txt") {}
+    static DoctorIndexService *instance;
+    DoctorIndexService() : PrimaryIndexService("doctorprimaryindex.txt") {}
+public:
+    static DoctorIndexService* getInstance() {
+        if ( instance == nullptr )
+            instance = new DoctorIndexService();
+        return instance ;
+    }
 };
+
+DoctorIndexService* DoctorIndexService::instance = nullptr ;
 
 #endif  // DOCTOR_INDEX_SERVICE_H

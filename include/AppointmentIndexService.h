@@ -4,9 +4,17 @@
 
 class AppointmentIndexService : public PrimaryIndexService {
  private:
- public:
-  AppointmentIndexService()
+    static AppointmentIndexService* instance ;
+    AppointmentIndexService()
       : PrimaryIndexService("appointmentIndexService.txt") {}
+ public:
+    static AppointmentIndexService* getInstance() {
+        if ( instance == nullptr )
+            instance = new AppointmentIndexService();
+        return instance;
+    }
 };
+
+AppointmentIndexService* AppointmentIndexService::instance = nullptr ;
 
 #endif
