@@ -14,7 +14,5 @@ void queryParser::handleSelect() {
   string table = tokens[3];
   string conditionField = tokens[5];
   string conditionVal = tokens[7].substr(1, tokens[7].size() - 2);
-  /*
-   * index logic;
-   */
+
 }
