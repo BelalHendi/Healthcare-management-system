@@ -1,4 +1,6 @@
-#include "SI.h"
+#include "../include/SI.h"
+
+#include <fstream>
 
 void SI::reclaim () {
     for (int i = 0; i < no_recs; i++)
@@ -38,11 +40,42 @@ int SI::search_in_SI (string sk, int beg, int end) {
 
 SI::SI (DataFile type_value) : il (type_value) {
     type = type_value;
-    SK_size = type == DOCTOR? 30 : 15;
+    SK_SIZE = type == DOCTOR? 30 : 15;
     string prepend_to_fileName = type == DOCTOR? "doctor" : "appointment";
     fileName = prepend_to_fileName + "_SI.txt";
     no_recs = 0;
     no_realRecs = 0;
+
+    fstream indexFile (fileName, ios::in | ios::binary);
+    //if the file doesn't exist, create it and close it
+    if (!indexFile.is_open()) {
+        indexFile.open(fileName, ios::out | ios::binary);
+        indexFile.close();
+    }
+    //If exists, read its content into memory
+    else
+    {
+        SI_rec rec = SI_rec ();
+        while (
+        indexFile.read((char *) rec.SK.c_str(), SK_SIZE) &&
+        indexFile.read((char *) &rec.pointer, sizeof(rec.pointer))
+        )
+        {
+            recs.push_back(rec);
+        }
+        indexFile.close();
+    }
+}
+
+SI::~SI () {
+    fstream indexFile (fileName, ios::out | ios::binary);
+    indexFile.seekp(0, ios::beg);
+    for (int i = 0; i < recs.size(); i++)
+    {
+        indexFile.write((char *) recs[i].SK.c_str(), SK_SIZE);
+        indexFile.write((char *) &recs[i].pointer, sizeof(recs[i].pointer));
+    }
+    indexFile.close();
 }
 
 void SI::reflectOnAdd (string sk, string pk) {
