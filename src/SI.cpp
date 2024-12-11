@@ -14,7 +14,7 @@ void SI::reclaim () {
     }
 }
 
-int SI::search_in_SI (string sk, int beg, int end) {
+int SI::search_in_SI (const string& sk, int beg, int end) {
     if (beg > end)
     {
         return -1;
@@ -38,33 +38,43 @@ int SI::search_in_SI (string sk, int beg, int end) {
 
 
 
-SI::SI (DataFile type_value) : il (type_value) {
+SI::SI(DataFile type_value) : il(type_value) {
     type = type_value;
-    SK_SIZE = type == DOCTOR? 30 : 15;
-    string prepend_to_fileName = type == DOCTOR? "doctor" : "appointment";
-    fileName = prepend_to_fileName + "_SI.txt";
-    no_recs = 0;
-    no_realRecs = 0;
+    SK_SIZE = (type == DOCTOR) ? 30 : 15;
+    fileName = (type == DOCTOR) ? "doctor_SI.txt" : "appointment_SI.txt";
 
-    fstream indexFile (fileName, ios::in | ios::binary);
-    //if the file doesn't exist, create it and close it
-    if (!indexFile.is_open()) {
-        indexFile.open(fileName, ios::out | ios::binary);
-        indexFile.close();
+    ifstream indexFile(fileName, ios::binary);
+    if (!indexFile) {
+        cerr << "Index file not found. Creating a new file: " << fileName << endl;
+        ofstream createFile(fileName, ios::binary);
+        createFile.close();
+        return;
     }
-    //If exists, read its content into memory
-    else
-    {
-        SI_rec rec = SI_rec ();
-        while (
-        indexFile.read((char *) rec.SK.c_str(), SK_SIZE) &&
-        indexFile.read((char *) &rec.pointer, sizeof(rec.pointer))
-        )
-        {
-            recs.push_back(rec);
-        }
-        indexFile.close();
+
+    vector<char> sk_buffer(SK_SIZE + 1, '\0');
+    int pointer = 0;
+    while (indexFile) {  // While the file is in a good state
+        // Read search key
+        if (!indexFile.read(sk_buffer.data(), SK_SIZE))
+            break; // Exit the loop if reading failed or reached EOF
+
+        // Convert to string and remove null characters
+        string searchKey(sk_buffer.data());
+        searchKey.erase(remove(searchKey.begin(), searchKey.end(), '\0'), searchKey.end());
+
+        // Read pointer
+        if (!indexFile.read(reinterpret_cast<char*>(&pointer), sizeof(pointer)))
+            break; // Exit the loop if reading failed
+
+        SI_rec rec;
+        rec.SK = searchKey;
+        rec.pointer = pointer;
+        recs.push_back(rec);
+
+        // Reset buffer
+        fill(sk_buffer.begin(), sk_buffer.end(), '\0');
     }
+    indexFile.close();
 }
 
 SI::~SI () {
@@ -78,7 +88,7 @@ SI::~SI () {
     indexFile.close();
 }
 
-void SI::reflectOnAdd (string sk, string pk) {
+void SI::reflectOnAdd (const string& sk, const string& pk) {
     int RRN_of_rec_containing_SK = search_in_SI(sk, 0, no_recs - 1);
     //no real rec with such sk
     if (RRN_of_rec_containing_SK == -1 || recs[RRN_of_rec_containing_SK].pointer == -1)
