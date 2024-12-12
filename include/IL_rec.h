@@ -13,6 +13,7 @@ class IL_rec {
         int pointer;
         bool is_deleted;
 
+        IL_rec ();
         IL_rec (int RRN_value, string PK_value, int ptr_value, bool is_deleted_value = false);
         IL_rec& operator= (const IL_rec &other);
 };
