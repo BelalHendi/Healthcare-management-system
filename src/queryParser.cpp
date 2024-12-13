@@ -2,7 +2,9 @@
 #include "queryParser.h"
 
 #include <AppointmentIndexService.h>
+#include <appointmentSecondryIndexService.h>
 #include <DoctorIndexService.h>
+#include <DoctorSecondryIndexService.h>
 #include <SI.h>
 
 #include "PrimaryIndexService.h"
@@ -29,8 +31,7 @@ void queryParser::parseQuery() {
             docs = offs.offsetToDoctors(id);
         } else {
             vector<string> secID;
-            SI secIndex(DOCTOR);
-            secID = secIndex.search(conditionVal);
+            secID = doctorSecondryIndexService::getInstance()->search(conditionVal);
             for (int i = 0; i < secID.size(); i++) {
                 id.push_back(DoctorIndexService::getInstance()->getById(secID[i]));
             }
@@ -63,8 +64,8 @@ void queryParser::parseQuery() {
             docs = offs.offsetToAppointments(id);
         } else {
             vector<string> secID;
-            SI secIndex(APPOINTMENT);
-            secID = secIndex.search(conditionField);
+            ;
+            secID = appointmentSecondryIndexService::getInstance()->search(conditionField);
             for (int i = 0; i < secID.size(); i++) {
                 id.push_back(AppointmentIndexService::getInstance()->getById(secID[i]));
             }

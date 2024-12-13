@@ -1,11 +1,14 @@
 #include "uiservice.h"
 
+#include <appointmentSecondryIndexService.h>
+#include <DoctorSecondryIndexService.h>
 #include <bits/stdc++.h>
 
 #include "AppointmentIndexService.h"
 #include "DoctorIndexService.h"
 #include "appointmentFileService.h"
 #include "doctorFileService.h"
+#include "DoctorSecondryIndexService.h"
 
 using namespace std;
 
@@ -23,7 +26,7 @@ void uiservice::addDoctor() {
   }
   int offset = doctorFileService.addRecord(id, name, address);
   DoctorIndexService::getInstance()->addIndex(id, offset );
-
+  doctorSecondryIndexService::getInstance()->reflectOnAdd( name , id ) ;
 }
 
 void uiservice::updateDoctor() {
@@ -31,6 +34,9 @@ void uiservice::updateDoctor() {
   string id;
   cin >> id;
   int offset = DoctorIndexService::getInstance()->getById(id);
+  vector<int> offsets;
+  offsets.push_back(offset);
+  doctor doctor = offsetService.offsetToDoctors(offsets).back();
   if (offset == -1) {
     cout << "there is no entity with this id!\n";
     return;
@@ -38,13 +44,12 @@ void uiservice::updateDoctor() {
   cout << "Enter new name : ";
   string name;
   cin >> name;
-  vector<int> offsets;
-  offsets.push_back(offset);
-  doctor doctor = offsetService.offsetToDoctors(offsets).back();
+
   doctorFileService.deleteRecord(offset);
   DoctorIndexService::getInstance()->removeById(id);
   offset = doctorFileService.addRecord(doctor.id, name, doctor.address);
   DoctorIndexService::getInstance()->addIndex(id, offset);
+  doctorSecondryIndexService::getInstance()->reflectOnUpdate( name , string(doctor.name) ) ;
 }
 
 void uiservice::deleteDoctor() {
@@ -56,8 +61,14 @@ void uiservice::deleteDoctor() {
     cout << "there is no entity with this id!\n";
     return;
   }
+
+  vector<int> offsets;
+  offsets.push_back(offset);
+  doctor doctor = offsetService.offsetToDoctors(offsets).back();
+
   DoctorIndexService::getInstance()->removeById(id);
   doctorFileService.deleteRecord(offset);
+  doctorSecondryIndexService::getInstance()->reflectOnDelete( string(doctor.name) , id );
 }
 
 void uiservice::addAppointment() {
@@ -75,6 +86,7 @@ void uiservice::addAppointment() {
   cout << "asd" << '\n';
   AppointmentIndexService::getInstance()->addIndex(
       id, appointmentFileService.addRecord(id, date, doctorID));
+  appointmentSecondryIndexService::getInstance()->reflectOnAdd( doctorID , id ) ;
 }
 
 void uiservice::updateAppointment() {
@@ -109,8 +121,12 @@ void uiservice::deleteAppointment() {
     cout << "there is no entity with this id!\n";
     return;
   }
+  vector<int> offsets ;
+  offsets.push_back(offset);
+  appointment appointment = offsetService.offsetToAppointments(offsets).back();
   AppointmentIndexService::getInstance()->removeById(id);
   appointmentFileService.deleteRecord(offset);
+  appointmentSecondryIndexService::getInstance()->reflectOnDelete( string(appointment.DoctorID) , id );
 }
 
 void uiservice::printDoctorInfo() {
