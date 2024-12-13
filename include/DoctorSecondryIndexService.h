@@ -11,6 +11,7 @@ class doctorSecondryIndexService : public SI {
     doctorSecondryIndexService();
     public:
     static doctorSecondryIndexService* getInstance();
+    static void destroyInstance();
 } ;
 
 #endif

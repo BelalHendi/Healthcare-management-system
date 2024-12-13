@@ -1,4 +1,4 @@
-#include "../include/IL_rec.h"
+#include "IL_rec.h"
 
 IL_rec::IL_rec () {
     RRN = -1;

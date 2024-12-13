@@ -1,4 +1,4 @@
-#include "../include/SI.h"
+#include "SI.h"
 
 #include <fstream>
 
@@ -103,7 +103,7 @@ SI::SI(DataFile type_value) : il(type_value) {
 }
 
 SI::~SI () {
-    ofstream indexFile (fileName, ios::binary);
+    ofstream indexFile (fileName, ios::out);
     indexFile.seekp(0, ios::beg);
 
     //set status flag to false (index will be up to date again after the deconsturctor finishes)

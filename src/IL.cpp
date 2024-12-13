@@ -1,4 +1,4 @@
-#include "../include/IL.h"
+#include "IL.h"
 
 #include <fstream>
 #include <algorithm>

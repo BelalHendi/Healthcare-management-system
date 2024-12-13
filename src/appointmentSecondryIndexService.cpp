@@ -10,3 +10,7 @@ appointmentSecondryIndexService* appointmentSecondryIndexService::getInstance() 
     }
     return instance ;
 }
+
+void appointmentSecondryIndexService::deleteInstance() {
+    delete instance;
+}

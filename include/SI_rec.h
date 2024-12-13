@@ -1,7 +1,6 @@
 #ifndef SECONDARY_INDEX_RECORD_H
 #define SECONDARY_INDEX_RECORD_H
-
-#include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 

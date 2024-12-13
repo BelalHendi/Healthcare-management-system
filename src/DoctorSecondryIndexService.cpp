@@ -11,4 +11,8 @@ doctorSecondryIndexService* doctorSecondryIndexService::getInstance() {
     return instance ;
 }
 
+void doctorSecondryIndexService::destroyInstance() {
+    delete instance;
+}
+
 

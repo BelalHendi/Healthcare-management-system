@@ -29,6 +29,7 @@ class uiservice {
   void printAppointmentInfo();
   void writeQuery();
  public:
+ ~uiservice();
   void run();
 };
 

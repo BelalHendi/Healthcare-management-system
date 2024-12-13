@@ -12,6 +12,11 @@
 
 using namespace std;
 
+uiservice::~uiservice() {
+  doctorSecondryIndexService::destroyInstance();
+  appointmentSecondryIndexService::deleteInstance();
+}
+
 void uiservice::addDoctor() {
   string id, name, address;
   cout << "Enter id , name , address : ";

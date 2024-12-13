@@ -1,4 +1,4 @@
-#include "../include/SI_rec.h"
+#include "SI_rec.h"
 
 SI_rec::SI_rec () {
     SK = "";

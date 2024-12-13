@@ -7,6 +7,7 @@ private :
     appointmentSecondryIndexService() ;
 public:
     static appointmentSecondryIndexService* getInstance() ;
+    static void deleteInstance() ;
 };
 #endif
 
