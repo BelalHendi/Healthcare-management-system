@@ -19,10 +19,11 @@ class IL {
         pair<int, int> search_in_IL (int RRN, string target);
 
     public:
-    IL (DataFile type_value);
-    int reflectOnAdd (int RRN, string pk);
-    int reflectOnDelete (int RRN, string pk);
-    vector <string> search (int RRN);
+        IL (DataFile type_value);
+        ~IL ();
+        int reflectOnAdd (int RRN, string pk);
+        int reflectOnDelete (int RRN, string pk);
+        vector <string> search (int RRN);
 
 };
 

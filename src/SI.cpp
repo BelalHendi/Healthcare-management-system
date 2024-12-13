@@ -1,4 +1,6 @@
-#include "SI.h"
+#include "../include/SI.h"
+
+#include <fstream>
 
 void SI::reclaim () {
     for (int i = 0; i < no_recs; i++)
@@ -36,13 +38,86 @@ int SI::search_in_SI (string sk, int beg, int end) {
 
 
 
-SI::SI (DataFile type_value) : il (type_value) {
+SI::SI(DataFile type_value) : il(type_value) {
     type = type_value;
-    SK_size = type == DOCTOR? 30 : 15;
-    string prepend_to_fileName = type == DOCTOR? "doctor" : "appointment";
-    fileName = prepend_to_fileName + "_SI.txt";
+    SK_SIZE = (type == DOCTOR) ? 30 : 15;
+    fileName = (type == DOCTOR) ? "doctor_SI.txt" : "appointment_SI.txt";
     no_recs = 0;
     no_realRecs = 0;
+
+    //If the index file doesn't exist, create it
+    fstream indexFile(fileName, ios::in | ios::out | ios::binary);
+    bool file_has_no_recs = false;
+    if (!indexFile) {
+        cerr << "Index file not found. Creating a new file: " << fileName << endl;
+        fstream createFile(fileName, ios::out | ios::binary);
+        file_has_no_recs = true;
+    }
+
+    if (file_has_no_recs)
+    {
+        indexFile.close();
+        return;
+    }
+
+    //set the status flag to true (index will not be up to date from now)
+    bool STATUS_FLAG = true;
+    indexFile.write((char *) &STATUS_FLAG, sizeof(bool));
+
+    //read the recs of the index file
+    vector<char> sk_buffer(SK_SIZE + 1, '\0');
+    int pointer = 0;
+
+    //skip the STATUS FLAG
+    indexFile.seekg(sizeof(bool), ios::beg);
+
+    // While the file is in a good state
+    //read each atribute of SK_rec
+    //and break whenever reading the data fails
+    while (indexFile) {  
+        //SK
+        if (!indexFile.read(sk_buffer.data(), SK_SIZE))
+            break;
+
+        // Convert to string and remove null characters
+        string sk(sk_buffer.data());
+        sk.erase(remove(sk.begin(), sk.end(), '\0'), sk.end());
+
+        //pointer
+        if (!indexFile.read(reinterpret_cast<char*>(&pointer), sizeof(pointer)))
+            break;
+
+        //adjust the memory representation of the SI (SI object) according to the read record
+        SI_rec rec (sk, pointer);
+        recs.push_back(rec);
+        no_recs++;
+        if (pointer != -1)
+        {
+            no_realRecs++;
+        }
+
+        // Reset buffer
+        fill(sk_buffer.begin(), sk_buffer.end(), '\0');
+    }
+    indexFile.close();
+}
+
+SI::~SI () {
+    ofstream indexFile (fileName, ios::binary);
+    indexFile.seekp(0, ios::beg);
+
+    //set status flag to false (index will be up to date again after the deconsturctor finishes)
+    bool STATUS_FLAG = false;
+    indexFile.write((char *) &STATUS_FLAG, sizeof(bool));
+
+    //write the recs
+    for (int i = 0; i < recs.size(); i++)
+    {
+        indexFile.write((char *) recs[i].SK.c_str(), SK_SIZE);
+        indexFile.write((char *) &recs[i].pointer, sizeof(recs[i].pointer));
+    }
+
+    indexFile.close();
 }
 
 void SI::reflectOnAdd (string sk, string pk) {

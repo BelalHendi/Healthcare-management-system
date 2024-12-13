@@ -1,6 +1,8 @@
 //
 // Created by omaro on 12/7/2024.
 //
+#include <queryParser.h>
+
 #include "AppointmentIndexService.h"
 #include "DoctorIndexService.h"
 #include "appointmentFileService.h"
@@ -16,6 +18,7 @@ class uiservice {
   DoctorFileService doctorFileService;
   AppointmentFileService appointmentFileService;
   offsetService offsetService;
+  queryParser parse;
   void addDoctor();
   void updateDoctor();
   void deleteDoctor();
@@ -24,7 +27,7 @@ class uiservice {
   void deleteAppointment();
   void printDoctorInfo();
   void printAppointmentInfo();
-
+  void writeQuery();
  public:
   void run();
 };

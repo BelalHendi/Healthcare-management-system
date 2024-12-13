@@ -12,10 +12,10 @@ using namespace std;
 class queryParser {
     private:
     vector<string> tokens;
-    vector<string> splitCommand(const string &query);
+    void splitCommand(const string &query);
 public:
-    queryParser(string &query);
-    void handleSelect();
+    void querySplitter(string &query);
+    void parseQuery();
 };
 
 

@@ -1,4 +1,9 @@
-#include "SI_rec.h"
+#include "../include/SI_rec.h"
+
+SI_rec::SI_rec () {
+    SK = "";
+    pointer = -1;
+}
 
 SI_rec::SI_rec (string SK_value, int pointer_value = -1) {
     SK = SK_value;

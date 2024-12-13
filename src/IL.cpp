@@ -1,4 +1,7 @@
-#include "IL.h"
+#include "../include/IL.h"
+
+#include <fstream>
+#include <algorithm>
 
 void IL::push_to_avail_list (int RRN) {
     int ptr_to_secondNode = avail_list_header;
@@ -53,10 +56,87 @@ pair<int, int> IL::search_in_IL (int RRN, string pk) {
 
 IL::IL (DataFile type_value) {
     type = type_value;
-    string prepend_to_fileName = type == DOCTOR? "doctor" : "appointment";
-    fileName = prepend_to_fileName + "_IL.txt";
+    fileName = type == DOCTOR? "doctor_IL.txt" : "appointment_IL.txt";
     PK_SIZE = 15;
     avail_list_header = -1;
+
+    //If the list file doesn't exist, create it
+    fstream listFile(fileName, ios::in | ios::out | ios::binary);
+    bool file_has_no_recs = false;
+    if (!listFile) {
+        cerr << "Index file not found. Creating a new file: " << fileName << endl;
+        fstream createFile(fileName, ios::out | ios::binary);
+        file_has_no_recs = true;
+    }
+
+    if (file_has_no_recs)
+    {
+        listFile.write((char *) &avail_list_header, sizeof(int));
+        listFile.close();
+        return;
+    }
+
+    //read the content of the inverted list file
+
+    //read the avail_list_header
+    listFile.read((char *) &avail_list_header, sizeof(int));
+
+    //read the recs of the inverted list file
+    int RRN = 0;
+    vector<char> pk_buffer(PK_SIZE + 1, '\0');
+    int pointer = 0;
+    bool is_deleted = false;
+    
+    // While the file is in a good state
+    //read each atribute of IL_rec
+    //and break whenever reading the data fails
+    while (listFile) {  
+        //RRN
+        if (!listFile.read(reinterpret_cast<char*>(&RRN), sizeof(RRN)))
+            break;
+
+        //PK
+        if (!listFile.read(pk_buffer.data(), PK_SIZE))
+            break;
+
+        // Convert to string and remove null characters
+        string pk(pk_buffer.data());
+        pk.erase(remove(pk.begin(), pk.end(), '\0'), pk.end());
+
+        //pointer
+        if (!listFile.read(reinterpret_cast<char*>(&pointer), sizeof(pointer)))
+            break;
+
+        //is_deleted
+        if (!listFile.read((char *) (&is_deleted), sizeof(is_deleted)))
+            break;
+
+        //add the read record to the memory
+        IL_rec rec (RRN, pk, pointer, is_deleted);
+        recs.push_back(rec);
+
+        // Reset buffer
+        fill(pk_buffer.begin(), pk_buffer.end(), '\0');
+    }
+    listFile.close();
+}
+
+IL::~IL () {
+    ofstream listFile (fileName, ios::binary);
+    listFile.seekp(0, ios::beg);
+
+    //write the avail_list_header
+    listFile.write((char *) &avail_list_header, sizeof(avail_list_header));
+
+    //write the recs
+    for (int i = 0; i < recs.size(); i++)
+    {
+        listFile.write((char *) &recs[i].RRN, sizeof(recs[i].RRN));
+        listFile.write((char *) recs[i].PK.c_str(), PK_SIZE);
+        listFile.write((char *) &recs[i].pointer, sizeof(recs[i].pointer));
+        listFile.write((char *) &recs[i].is_deleted, sizeof(recs[i].is_deleted));
+    }
+    listFile.close();
 }
 
 int IL::reflectOnAdd (int RRN, string pk) {

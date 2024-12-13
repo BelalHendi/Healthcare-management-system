@@ -10,6 +10,7 @@ class SI_rec {
         string SK;
         int pointer;
    
+        SI_rec ();
         SI_rec (string SK_value, int pointer_value);
         bool operator< (const SI_rec& index) const;
 };

@@ -1,4 +1,11 @@
-#include "IL_rec.h"
+#include "../include/IL_rec.h"
+
+IL_rec::IL_rec () {
+    RRN = -1;
+    PK = "";
+    pointer = -1;
+    is_deleted = true;
+}
 
 IL_rec::IL_rec (int RRN_value, string PK_value, int ptr_value, bool is_deleted_value) {
     RRN = RRN_value;

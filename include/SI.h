@@ -11,7 +11,7 @@ class SI {
     private:
         DataFile type;
         string fileName;
-        unsigned short SK_size;
+        unsigned short SK_SIZE;
         vector <SI_rec> recs;
         unsigned int no_recs;
         //the # of records that are not deleted
@@ -23,6 +23,7 @@ class SI {
 
     public:
         SI (DataFile type_value);
+        ~SI ();
         void reflectOnAdd (string sk, string pk);
         void reflectOnUpdate(string old_sk, string new_sk);
         void reflectOnDelete (string sk, string pk);
