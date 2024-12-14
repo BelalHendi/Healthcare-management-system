@@ -78,17 +78,19 @@ void uiservice::deleteDoctor() {
 
 void uiservice::addAppointment() {
   string id, date, doctorID;
-  cout << "Enter id , name , doctor id : ";
+  cout << "Enter Appointment ID , Date , Doctor ID : ";
   cin >> id >> date >> doctorID;
   id = id.substr(0, 15);
   date = date.substr(0, 30);
   doctorID = doctorID.substr(0, 15);
-
-  if (AppointmentIndexService::getInstance()->getById(id) != -1) {
-    cout << "the id is being is being used by a diffirent entity!\n";
+  if (DoctorIndexService::getInstance()->getById(id) == -1) {
+    cout << "there is no doctor with this id!\n";
     return;
   }
-  cout << "asd" << '\n';
+  if (AppointmentIndexService::getInstance()->getById(id) != -1) {
+    cout << "the id is being is being used by a different entity!\n";
+    return;
+  }
   AppointmentIndexService::getInstance()->addIndex(
       id, appointmentFileService.addRecord(id, date, doctorID));
   appointmentSecondryIndexService::getInstance()->reflectOnAdd( doctorID , id ) ;
