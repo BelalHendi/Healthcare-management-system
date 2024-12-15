@@ -41,7 +41,7 @@ void uiservice::updateDoctor() {
   int offset = DoctorIndexService::getInstance()->getById(id);
   vector<int> offsets;
   offsets.push_back(offset);
-  doctor doctor = offsetService.offsetToDoctors(offsets).back();
+  doctor doctor = offService.offsetToDoctors(offsets).back();
   if (offset == -1) {
     cout << "there is no entity with this id!\n";
     return;
@@ -69,7 +69,7 @@ void uiservice::deleteDoctor() {
 
   vector<int> offsets;
   offsets.push_back(offset);
-  doctor doctor = offsetService.offsetToDoctors(offsets).back();
+  doctor doctor = offService.offsetToDoctors(offsets).back();
 
   DoctorIndexService::getInstance()->removeById(id);
   doctorFileService.deleteRecord(offset);
@@ -110,7 +110,7 @@ void uiservice::updateAppointment() {
   cin >> date;
   vector<int> offsets;
   offsets.push_back(offset);
-  appointment appointment = offsetService.offsetToAppointments(offsets).back();
+  appointment appointment = offService.offsetToAppointments(offsets).back();
   appointmentFileService.deleteRecord(offset);
   AppointmentIndexService::getInstance()->removeById(id);
   offset = appointmentFileService.addRecord(appointment.AppointmentID,
@@ -130,7 +130,7 @@ void uiservice::deleteAppointment() {
   }
   vector<int> offsets ;
   offsets.push_back(offset);
-  appointment appointment = offsetService.offsetToAppointments(offsets).back();
+  appointment appointment = offService.offsetToAppointments(offsets).back();
   AppointmentIndexService::getInstance()->removeById(id);
   appointmentFileService.deleteRecord(offset);
   appointmentSecondryIndexService::getInstance()->reflectOnDelete( string(appointment.DoctorID) , id );
@@ -143,7 +143,7 @@ void uiservice::printDoctorInfo() {
   int offset = DoctorIndexService::getInstance()->getById(DoctorId);
   vector<int> vec;
   vec.push_back(offset);
-  vector<doctor> appointments = offsetService.offsetToDoctors(vec);
+  vector<doctor> appointments = offService.offsetToDoctors(vec);
 
   for (doctor doc : appointments) {
     cout << "Doctor Info:" << endl;
@@ -168,7 +168,7 @@ void uiservice::printAppointmentInfo() {
   int offset = AppointmentIndexService::getInstance()->getById(appointmentId);
   vector<int> vec;
   vec.push_back(offset);
-  vector<appointment> appointments = offsetService.offsetToAppointments(vec);
+  vector<appointment> appointments = offService.offsetToAppointments(vec);
 
   for (appointment app : appointments) {
     cout << "Appointment Info:" << endl;

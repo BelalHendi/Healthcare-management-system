@@ -17,7 +17,7 @@ class uiservice {
  private:
   DoctorFileService doctorFileService;
   AppointmentFileService appointmentFileService;
-  offsetService offsetService;
+  offsetService offService;
   queryParser parse;
   void addDoctor();
   void updateDoctor();
